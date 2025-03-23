@@ -1,0 +1,13 @@
+html
+  head
+    title Slutskærm
+    link(rel="stylesheet" href="css/end.css")
+  body
+    h1 Spillet er slut!
+    h2 Rangliste
+    ol#leaderboard
+      each player in finalScores
+        li
+          span.name #{player.name}
+          span.score #{player.totalScore}
+    button(type="button" onclick="window.location.href='/'") Tilbage til forsiden

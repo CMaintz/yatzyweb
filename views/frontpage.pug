@@ -1,0 +1,32 @@
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Yahtzee Startscreen
+    link(rel="stylesheet" href="css/front.css")
+    script(src="js/clientFront.js" defer)
+  body
+    .container
+      h1 Yatzy Lobby
+      .players-section
+        h2 Spillere i det nuværende spil:
+        ol#userList
+          each player in players
+            li.player= player.name
+        if players.length === 0
+          p#noPlayersMessage(style="display: block") Ingen spillere tilmeldt endnu.
+
+
+      if !gameStarted
+        .input-section
+          h2 Tilmeld dig spillet
+          label(for="playername") Navn:
+          input(type="text" id="playername" placeholder="Indtast dit navn")
+          button(type="button" id="opretButton") Opret
+          button.start-button(type="button" id="startButton") Start spil
+      else
+        .game-in-progress
+          h2 Spillet er allerede startet!
+          p Vent på næste runde for at kunne deltage.
+    footer#footer
+      include includes/foot.pug

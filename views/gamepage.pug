@@ -1,0 +1,47 @@
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Yatzy Game
+    link(rel="stylesheet" href="css/game.css")
+    script(src="js/clientPlay.js", defer)
+  body
+    .current-player
+      p.currentPlayerName Current Player: #{currentUser.name}
+      
+    .wrapper
+      .dice-and-button-container
+        .die-container
+          each die in dice
+            .individual-dice-container(id=`${die.id}-container` 
+            class=die.isHeld ? 'held' : ''
+            )
+              img.die(id=`${die.id}` 
+              src=`/images/dice_${die.value}.png` 
+              alt=`Dice ${die.id}` 
+              value=`${die.value}`
+              )
+        .counter-and-rollbutton
+          .round-count Round #{round}
+          .roll-count Rolls left: #{rollsLeft}
+          button.roll-button#roll-button Roll
+
+      .score-container
+        each score, id in scores
+          .score-data(id=`${id}-data`)
+            label.score-label(for=id)= id
+            input.score-display(
+              type="number" 
+              id=id
+              class=score.saved ? 'saved' : ''
+              value=score.score 
+              readonly
+            )
+
+      .scoreboard
+        h2 Scoreboard
+        ul
+          each player in players
+            li(class=(player.totalScore === Math.max(...players.map(p => p.totalScore)) ? 'leader' : ''))
+              span.player-name #{player.name}: 
+              span.player-score #{player.totalScore}
