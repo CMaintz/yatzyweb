@@ -35,7 +35,8 @@ async function scorePicked(event) {
       alert(`It's now ${data.currentUser.name}'s turn!`);
     }
   } else {
-    alert(response.message || "An error occurred.");
+    const error = await response.json().catch(() => ({}));
+    alert(error.message || "An error occurred.");
   }
 }
 
@@ -65,7 +66,8 @@ async function rollDice() {
       updateGUI(data);
     });
   } else {
-    alert(response.message);
+    const error = await response.json().catch(() => ({}));
+    alert(error.message || "Could not roll the dice.");
   }
 }
 

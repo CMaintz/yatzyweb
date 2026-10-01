@@ -42,7 +42,7 @@ async function addPlayer() {
     updatePlayersList(data.players);
   } else {
     const errorData = await response.json();
-    alert(errorData.message || "You suck");
+    alert(errorData.message || "Could not add player.");
   }
 }
 
