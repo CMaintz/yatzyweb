@@ -1,4 +1,3 @@
-const fs = require("fs");
 const Player = require("./Player");
 const Dice = require("./Dice");
 const YahtzeeBrain = require("./YahtzeeBrain");
@@ -17,29 +16,23 @@ class GameState {
     this.rollsLeft = 3;
     this.roundNumber = 1;
     this.gameInProgress = false;
-
-    if (fs.existsSync("./saves/gameState.json")) {
-      this.loadGame();
-    }
+    this.finalScores = null;
   }
 
   addPlayer(playername) {
     let player = new Player(playername);
     this.players.push(player);
-    this.saveGame();
     return player;
   }
 
   startGame() {
-      if (this.players.length < 2) {
+    if (this.players.length < 2) {
       throw new Error("Need at least 2 players to start the game.");
     }
     this.gameInProgress = true;
-    this.saveGame();
   }
-  
-//TODO: skal også gemme players, som skal loades ind i GameState. :C
-  async rollDice() {
+
+  rollDice() {
     if (this.rollsLeft === 0) {
       throw new Error("No rolls left for this turn.");
     }
@@ -49,7 +42,6 @@ class GameState {
       }
     });
     this.rollsLeft -= 1;
-    this.saveGame();
   }
 
   selectScore(category) {
@@ -58,7 +50,6 @@ class GameState {
       category,
       YahtzeeBrain.calculateScore(this.dice, category)
     );
-    this.saveGame();
   }
 
   nextTurn() {
@@ -78,7 +69,6 @@ class GameState {
       this.gameInProgress = false;
       this.generateFinalScores();
     }
-    this.saveGame();
   }
 
   // rangliste baseret på score
@@ -101,31 +91,6 @@ class GameState {
     return this.gameInProgress;
   }
 
-  saveGame() {
-    const data = JSON.stringify(this);
-    fs.writeFileSync("./saves/gameState.json", data);
-  }
-
-  loadGame() {
-    const data = fs.readFileSync("./saves/gameState.json");
-    Object.assign(this, JSON.parse(data));
-  }
-
-  removeGameFile() {
-    if (fs.existsSync("./saves/gameState.json")) {
-      try {
-        fs.unlinkSync("./saves/gameState.json"); // Sletter filen synkront
-        return true;
-      } catch (error) {
-        console.error(`Kunne ikke fjerne fil:`, error);
-        return false;
-      }
-    } else {
-      console.warn(`Filen eksisterer ikke`);
-      return false;
-    }
-  }
-
   getRoundCount() {
     return this.roundNumber;
   }
@@ -133,8 +98,6 @@ class GameState {
   generateScoreData() {
     let currentPlayer = this.players[this.currentPlayerIndex];
     let scoreData = {};
-    const cat = Object.keys(YahtzeeBrain); //Kan erstattes med det array fra APP
-    console.log(cat);
     const categories = [
       "1-s",
       "2-s",
