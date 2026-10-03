@@ -1,47 +1,71 @@
-html
+-
+  const upper = [["1-s", "Ones"], ["2-s", "Twos"], ["3-s", "Threes"], ["4-s", "Fours"], ["5-s", "Fives"], ["6-s", "Sixes"]];
+  const lower = [["one-pair", "One pair"], ["two-pairs", "Two pairs"], ["three-same", "Three of a kind"], ["four-same", "Four of a kind"], ["full-house", "Full house"], ["small-straight", "Small straight"], ["large-straight", "Large straight"], ["chance", "Chance"], ["yatzy", "Yatzy"]];
+  const notRolled = rollsLeft === 3;
+  const best = Math.max(...players.map((p) => p.totalScore));
+
+mixin category(id, label)
+  - const s = scores[id];
+  button.row.category(type="button" id=id
+    class=[s.saved && 'saved', !s.saved && !notRolled && s.score === 0 && 'zero']
+    disabled=s.saved || notRolled)
+    span.label= label
+    span.value= s.saved || !notRolled ? s.score : ''
+
+mixin derived(id, label, extra)
+  .row(class=extra)
+    span.label= label
+    span.value(data-derived=id)= scores[id].score
+
+doctype html
+html(lang="en")
   head
-    meta(charset="UTF-8")
-    meta(name="viewport" content="width=device-width, initial-scale=1.0")
-    title Yatzy Game
-    link(rel="stylesheet" href="css/game.css")
-    script(src="js/clientPlay.js", defer)
+    include includes/head.pug
+    title Yatzy
+    link(rel="stylesheet" href="/css/game.css")
+    script(src="/js/clientPlay.js" defer)
   body
-    .current-player
-      p.currentPlayerName Current Player: #{currentUser.name}
-      
-    .wrapper
-      .dice-and-button-container
-        .die-container
+    main.game(data-rolls-left=rollsLeft)
+      header.turn
+        div
+          p.eyebrow Now playing
+          h1.currentPlayerName= currentUser.name
+        p.round-count Round #{round} of 15
+
+      section.tray(aria-label="Dice")
+        .dice
           each die in dice
-            .individual-dice-container(id=`${die.id}-container` 
-            class=die.isHeld ? 'held' : ''
-            )
-              img.die(id=`${die.id}` 
-              src=`/images/dice_${die.value}.png` 
-              alt=`Dice ${die.id}` 
-              value=`${die.value}`
-              )
-        .counter-and-rollbutton
-          .round-count Round #{round}
-          .roll-count Rolls left: #{rollsLeft}
-          button.roll-button#roll-button Roll
+            button.die(type="button" id=die.id
+              class=[die.isHeld && 'held', die.value === 0 && 'blank']
+              aria-pressed=String(die.isHeld)
+              disabled=notRolled || rollsLeft === 0)
+              img(src=`/images/dice_${die.value}.png` alt=die.value ? `Die showing ${die.value}` : "Unrolled die")
+        .tray-actions
+          p#status.status(role="status" aria-live="polite")
+          .roll
+            span.roll-count Rolls left: #{rollsLeft}
+            button.btn.roll-button#roll-button(type="button" disabled=rollsLeft === 0) Roll
 
-      .score-container
-        each score, id in scores
-          .score-data(id=`${id}-data`)
-            label.score-label(for=id)= id
-            input.score-display(
-              type="number" 
-              id=id
-              class=score.saved ? 'saved' : ''
-              value=score.score 
-              readonly
-            )
+      section.sheet.card(aria-label="Score sheet")
+        div
+          h2 Upper section
+          each c in upper
+            +category(c[0], c[1])
+          +derived("upper-sum", "Sum", "total")
+          +derived("bonus", "Bonus (63+)")
+        div
+          h2 Lower section
+          each c in lower
+            +category(c[0], c[1])
+          +derived("lower-sum", "Sum", "total")
+          +derived("grand-total", "Total", "total grand")
 
-      .scoreboard
+      aside.scoreboard.card
         h2 Scoreboard
-        ul
+        ol
           each player in players
-            li(class=(player.totalScore === Math.max(...players.map(p => p.totalScore)) ? 'leader' : ''))
-              span.player-name #{player.name}: 
-              span.player-score #{player.totalScore}
+            li(class=[player === currentUser && 'current', best > 0 && player.totalScore === best && 'leader'])
+              span.player-name= player.name
+              span.player-score= player.totalScore
+    footer#footer
+      include includes/foot.pug

@@ -1,60 +1,53 @@
-const opretButton = document.querySelector("#opretButton");
+const form = document.querySelector("#addPlayerForm");
 const startButton = document.querySelector("#startButton");
 const playerNameInput = document.querySelector("#playername");
 const playersList = document.querySelector("#userList");
-const noPlayersMessage = document.querySelector("#noPlayersMessage"); // Elementet med meddelelsen "Ingen spillere tilmeldt endnu."
+const noPlayersMessage = document.querySelector("#noPlayersMessage");
+const statusLine = document.querySelector("#status");
 
-if (opretButton) {
-  opretButton.addEventListener("click", addPlayer);
+function say(message, isError = false) {
+  statusLine.textContent = message;
+  statusLine.classList.toggle("error", isError);
 }
 
-// Start spillet og / eller gå til spil-siden
-startButton.addEventListener("click", async () => {
-  const response = await fetch("/play", {
-    method: "GET",
-  });
-
-  if (response.status !== 200) {
-    const data = await response.json();
-    alert(data.message);
-  } else {
-    window.location.href = "/play";
-  }
-});
-
-async function addPlayer() {
-  const playerName = playerNameInput.value.trim();
-  if (playerName === "") {
-    alert("Please enter a player name!");
-    return;
-  }
+form?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const name = playerNameInput.value.trim();
+  if (!name) return say("Enter a player name.", true);
 
   const response = await fetch("/add-player", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ name: playerName }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name }),
   });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) return say(data.message || "Could not add player.", true);
 
-  if (response.status === 200) {
-    const data = await response.json();
-    updatePlayersList(data.players);
+  updatePlayersList(data.players);
+  say(`${name} joined.`);
+});
+
+startButton?.addEventListener("click", async () => {
+  const response = await fetch("/play");
+  if (response.ok) {
+    window.location.href = "/play";
   } else {
-    const errorData = await response.json();
-    alert(errorData.message || "Could not add player.");
+    const data = await response.json().catch(() => ({}));
+    say(data.message || "Could not start the game.", true);
   }
-}
+});
 
-// Opdaterer spiller liste i GUI
 function updatePlayersList(players) {
   playerNameInput.value = "";
-  noPlayersMessage.style.display = "none";
-  playersList.innerHTML = "";
-  players.forEach((player) => {
-    const playerItem = document.createElement("li");
-    playerItem.classList.add("player");
-    playerItem.textContent = player.name;
-    playersList.appendChild(playerItem);
-  });
+  playerNameInput.focus();
+  noPlayersMessage.hidden = players.length > 0;
+  startButton.disabled = players.length < 2;
+  playersList.replaceChildren(
+    ...players.map((player) => {
+      const item = document.createElement("li");
+      item.classList.add("player");
+      item.textContent = player.name;
+      return item;
+    })
+  );
 }

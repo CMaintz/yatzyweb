@@ -1,0 +1,134 @@
+:root {
+  --bg: #f3efe6;
+  --card: #fffdf8;
+  --ink: #1f2a2e;
+  --muted: #6b7478;
+  --line: #e6dfd1;
+  --felt: #1e5b4a;
+  --felt-dark: #143f33;
+  --tint: #e6f1ec;
+  --gold: #d9a441;
+  --red: #b3261e;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgb(31 42 46 / 6%), 0 10px 28px rgb(31 42 46 / 9%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.4;
+}
+
+h1,
+h2 {
+  margin: 0;
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.eyebrow,
+.card h2 {
+  margin: 0 0 0.5rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.7rem 1.3rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--felt);
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.1s, opacity 0.15s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--felt-dark);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+}
+
+.btn.secondary {
+  background: transparent;
+  color: var(--felt);
+  box-shadow: inset 0 0 0 2px var(--felt);
+}
+
+.btn.secondary:hover {
+  background: var(--tint);
+}
+
+.status {
+  min-height: 1.4em;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.status.error {
+  color: var(--red);
+  font-weight: 600;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+footer {
+  margin-top: auto;
+  padding: 1rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+footer p {
+  margin: 0;
+}
