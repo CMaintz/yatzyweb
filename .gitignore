@@ -1,3 +1,5 @@
 /nodemon.json
 /node_modules
 /old
+/saves
+/coverage

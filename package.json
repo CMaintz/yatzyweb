@@ -3,16 +3,23 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "test": "node --test",
+    "coverage": "node --test --experimental-test-coverage"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "Christoffer Maintz",
+  "license": "MIT",
+  "description": "Hot-seat Yatzy in the browser, built with Express and Pug",
   "dependencies": {
     "express": "^4.21.1",
     "express-session": "^1.18.1",
-    "fs": "^0.0.1-security",
     "pug": "^3.0.3"
+  },
+  "devDependencies": {
+    "supertest": "^7.3.0"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
