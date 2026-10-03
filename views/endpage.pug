@@ -1,13 +1,20 @@
-html
+doctype html
+html(lang="en")
   head
-    title Slutskærm
-    link(rel="stylesheet" href="css/end.css")
+    include includes/head.pug
+    title Game over
+    link(rel="stylesheet" href="/css/end.css")
   body
-    h1 Spillet er slut!
-    h2 Rangliste
-    ol#leaderboard
-      each player in finalScores
-        li
-          span.name #{player.name}
-          span.score #{player.totalScore}
-    button(type="button" onclick="window.location.href='/'") Tilbage til forsiden
+    main.end.card
+      p.eyebrow Game over
+      h1 #{finalScores[0].name} wins
+      h2 Leaderboard
+      ol#leaderboard
+        each player, i in finalScores
+          li(class=player.totalScore === finalScores[0].totalScore ? 'winner' : '')
+            span.place= i + 1
+            span.name #{player.name}
+            span.score #{player.totalScore}
+      a.btn(href="/") Play again
+    footer#footer
+      include includes/foot.pug

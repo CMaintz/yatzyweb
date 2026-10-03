@@ -4,7 +4,7 @@
 
 Yatzy in the browser. Add a few players in the lobby, then take turns at the same screen: roll up to three times, hold the dice you like, and pick a category on the score sheet. When everyone has filled all 15 categories you get a leaderboard.
 
-I built it for the Distribueret Programmering course on the Datamatiker programme at Erhvervsakademi Aarhus. The game state lives on the server, Pug renders the pages, and the browser talks to a small JSON API for rolling, holding and scoring. The UI text is a mix of Danish and English.
+I built it for the Distribueret Programmering course on the Datamatiker programme at Erhvervsakademi Aarhus. The game state lives on the server, Pug renders the pages, and the browser talks to a small JSON API for rolling, holding and scoring.
 
 ![Game page mid-turn with two dice held](docs/game.png)
 

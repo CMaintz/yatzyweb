@@ -123,7 +123,7 @@ describe("game routes", () => {
     assert.equal(last.body.redirectToEnd, true);
 
     const end = await agent.get("/end").expect(200);
-    assert.match(end.text, /Rangliste/);
+    assert.match(end.text, /Leaderboard/);
     await agent.get("/play").expect(302).expect("Location", "/end");
 
     const lobby = await agent.get("/").expect(200);
