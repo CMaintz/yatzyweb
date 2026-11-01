@@ -12,7 +12,7 @@
   "license": "MIT",
   "description": "Hot-seat Yatzy in the browser, built with Express and Pug",
   "dependencies": {
-    "express": "^4.21.1",
+    "express": "^5.0.0",
     "express-session": "^1.18.1",
     "pug": "^3.0.3"
   },
